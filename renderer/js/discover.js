@@ -582,7 +582,7 @@ async function searchBooks() {
     searchBtn.disabled = true;
 
     try {
-        // Ask the API (see api.js) - the dropdown decides the search type
+        // Ask the API (see core.js) - the dropdown decides the search type
         const docs = await fetchSearchResults(searchType.value, search);
 
         // Error handling 2: empty results
