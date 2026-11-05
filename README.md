@@ -1,4 +1,4 @@
-# iMybook - Reading Book Application
+# iMyBook - Reading Book Application
 
 A desktop application built with **Electron**, HTML, CSS and JavaScript (OOP).
 Course: CSC2923 Object Oriented Programming - Final Project, Session 2 2026/2027.
@@ -23,8 +23,8 @@ No API key is needed. An internet connection is required.
 Requirements: [Node.js](https://nodejs.org) (LTS).
 
 ```bash
-git clone <repository-url>
-cd imybook
+git clone https://github.com/itsaisya-alt/iMyBook-Application.git
+cd iMyBook-Application
 npm install
 npm start
 ```
@@ -32,7 +32,7 @@ npm start
 ## Project structure (where to find things)
 
 ```
-imybook/
+iMyBook-Application/
 ├── main.js              # Electron main process (creates the window)
 ├── package.json         # dependencies and run scripts
 └── renderer/
