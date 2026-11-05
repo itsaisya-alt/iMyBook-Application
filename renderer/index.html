@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!--
+        Content Security Policy.
+        Open Library cover links REDIRECT to archive.org servers, and a CSP also
+        checks the redirected address. If archive.org is not listed in img-src,
+        the browser blocks the image and the cover never appears.
+    -->
+    <meta http-equiv="Content-Security-Policy"
+    content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://covers.openlibrary.org https://openlibrary.org https://archive.org https://*.archive.org; connect-src 'self' https://openlibrary.org; object-src 'none'; base-uri 'none';">
+
+    <title>iMybook - Your Reading Library</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="app-container">
+
+        <!-- ================= Sidebar ================= -->
+        <aside class="sidebar">
+            <h1 class="logo">iMybook<span>.</span></h1>
+            <p class="logo-tagline">Read more. Remember more.</p>
+
+            <p class="menu-title">YOUR LIBRARY</p>
+
+            <nav class="nav-list" aria-label="Main navigation">
+                <button id="discoveryBtn" class="nav-btn active">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+                    <span>Discover Books</span>
+                </button>
+
+                <button id="readingBtn" class="nav-btn">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v16H6.5A2.5 2.5 0 0 0 4 21.5z"/><path d="M4 5.5v16"/></svg>
+                    <span>My Reading List</span>
+                    <span id="navCount" class="nav-count">0</span>
+                </button>
+
+                <button id="progressBtn" class="nav-btn">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.2"/></svg>
+                    <span>Reading Progress</span>
+                </button>
+            </nav>
+
+            <div class="sidebar-footer">
+                <p class="sidebar-quote">“A reader lives a thousand lives before he dies.”</p>
+                <p class="sidebar-author">George R.R. Martin</p>
+            </div>
+        </aside>
+
+        <!-- ================= Main Content ================= -->
+        <main class="main-content">
+
+            <!-- ============ PAGE 1: DISCOVER BOOKS ============ -->
+            <section id="discoveryPage" class="page">
+
+                <header class="hero">
+                    <div class="hero-text">
+                        <p class="eyebrow">YOUR NEXT CHAPTER STARTS HERE</p>
+                        <h2>Discover your next favourite.</h2>
+
+                        <div class="search-box">
+                            <select id="searchType" aria-label="Search by">
+                                <option value="q">Title or author</option>
+                                <option value="title">Title only</option>
+                                <option value="author">Author only</option>
+                            </select>
+
+                            <input
+                                type="text"
+                                id="searchInput"
+                                placeholder="Search for a book or an author..."
+                                maxlength="100"
+                            >
+
+                            <button id="searchBtn" class="btn-gold">Search</button>
+                        </div>
+
+                        <p id="searchMessage" class="form-message" role="alert"></p>
+
+                        <div class="try-row">
+                            <span>Try:</span>
+                            <button class="try-chip" data-query="Harry Potter">Harry Potter</button>
+                            <button class="try-chip" data-query="Agatha Christie">Agatha Christie</button>
+                            <button class="try-chip" data-query="Sherlock Holmes">Sherlock Holmes</button>
+                            <button class="try-chip" data-query="Pride and Prejudice">Pride and Prejudice</button>
+                        </div>
+                    </div>
+
+                    <!-- Decorative book spines (pure CSS) -->
+                    <div class="hero-books" aria-hidden="true">
+                        <span class="spine s1"></span>
+                        <span class="spine s2"></span>
+                        <span class="spine s3"></span>
+                        <span class="spine s4"></span>
+                        <span class="spine s5"></span>
+                        <span class="spine s6"></span>
+                    </div>
+                </header>
+
+                <!-- Search results (shown right under the search box) -->
+                <section id="searchPanel" style="display:none;">
+                    <div class="panel-heading">
+                        <h3 id="searchTitle">Search results</h3>
+                        <button id="clearSearchBtn" class="btn-secondary">Clear search</button>
+                    </div>
+
+                    <div id="bookResults"></div>
+                </section>
+
+                <!-- Tabs -->
+                <div class="tabs" id="discoverTabs" role="tablist">
+                    <button class="tab-btn active" data-tab="browse" role="tab">Browse Store</button>
+                    <button class="tab-btn" data-tab="suggest" role="tab">Suggest For Me</button>
+                </div>
+
+                <!-- Tab 1: Browse -->
+                <section id="browsePanel">
+                    <div id="storeContent"></div>
+                </section>
+
+                <!-- Tab 2: Personalised suggestions -->
+                <section id="suggestPanel" style="display:none;">
+
+                    <div class="card recommendation-section">
+                        <h3>Find your next read.</h3>
+                        <p class="muted">Pick a genre, tell us what you feel like, and we will choose books for you.</p>
+
+                        <p class="field-label">1. Choose a genre</p>
+                        <div class="genre-chips" id="genreChips">
+                            <button class="genre-chip" data-genre="fantasy">Fantasy</button>
+                            <button class="genre-chip" data-genre="romance">Romance</button>
+                            <button class="genre-chip" data-genre="mystery">Mystery</button>
+                            <button class="genre-chip" data-genre="science fiction">Sci-Fi</button>
+                            <button class="genre-chip" data-genre="horror">Horror</button>
+                            <button class="genre-chip" data-genre="thriller">Thriller</button>
+                            <button class="genre-chip" data-genre="history">History</button>
+                            <button class="genre-chip" data-genre="biography">Biography</button>
+                        </div>
+
+                        <p class="field-label">2. Tell us your mood (optional)</p>
+                        <div class="preference-row">
+                            <label>
+                                <span>Book length</span>
+                                <select id="lengthSelect">
+                                    <option value="any">Any length</option>
+                                    <option value="short">Short (up to 250 pages)</option>
+                                    <option value="medium">Medium (251 - 450 pages)</option>
+                                    <option value="long">Long (over 450 pages)</option>
+                                </select>
+                            </label>
+
+                            <label>
+                                <span>Era</span>
+                                <select id="eraSelect">
+                                    <option value="any">Any era</option>
+                                    <option value="classic">Classic (before 1980)</option>
+                                    <option value="modern">Modern (1980 or later)</option>
+                                </select>
+                            </label>
+
+                            <label>
+                                <span>Favourite author</span>
+                                <input type="text" id="authorInput" placeholder="e.g. Rowling" maxlength="60">
+                            </label>
+
+                            <button id="recommendBtn" class="btn-primary recommend-button">Suggest Books</button>
+                        </div>
+
+                        <p id="recommendMessage" class="form-message" role="alert"></p>
+                    </div>
+
+                    <div id="recommendationResults"></div>
+
+                </section>
+
+            </section>
+
+            <!-- ============ PAGE 2: MY READING LIST ============ -->
+            <section id="readingPage" class="page" style="display:none;">
+
+                <header class="page-header">
+                    <p class="eyebrow">YOUR PERSONAL COLLECTION</p>
+                    <h2>Your reading library.</h2>
+                    <p class="hero-description">
+                        Keep track of the books you want to read
+                        and the stories you've completed.
+                    </p>
+                </header>
+
+                <div class="list-toolbar card">
+                    <div class="status-filters" id="statusFilters">
+                        <button class="filter-chip selected" data-filter="all">All</button>
+                        <button class="filter-chip" data-filter="Want to Read">Want to Read</button>
+                        <button class="filter-chip" data-filter="Currently Reading">Currently Reading</button>
+                        <button class="filter-chip" data-filter="Completed">Completed</button>
+                    </div>
+
+                    <div class="list-tools">
+                        <input type="text" id="listSearch" placeholder="Search your list..." maxlength="60" aria-label="Search your list">
+
+                        <select id="listSort" aria-label="Sort books">
+                            <option value="recent">Recently added</option>
+                            <option value="title">Title A - Z</option>
+                            <option value="progress">Most progress</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div id="readingList"></div>
+
+            </section>
+
+            <!-- ============ PAGE 3: READING PROGRESS ============ -->
+            <section id="progressPage" class="page" style="display:none;">
+
+                <header class="page-header">
+                    <p class="eyebrow">YOUR READING JOURNEY</p>
+                    <h2>Your reading progress.</h2>
+                    <p class="hero-description">
+                        Read every day, see your stats soar and finish more books.
+                    </p>
+                </header>
+
+                <div id="progressContent"></div>
+
+            </section>
+
+        </main>
+    </div>
+
+    <!-- Toast messages (feedback that does not interrupt the user) -->
+    <div id="toastContainer" class="toast-container" aria-live="polite"></div>
+
+    <!-- 3 script files, loaded in this order -->
+    <script src="js/core.js"></script>
+    <script src="js/discover.js"></script>
+    <script src="js/reading.js"></script>
+
+</body>
+</html>

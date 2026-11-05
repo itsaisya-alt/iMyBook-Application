@@ -1,0 +1,20 @@
+{
+  "name": "imybook",
+  "version": "1.0.0",
+  "description": "iMybook - a reading book desktop application built with Electron, HTML, CSS, JavaScript, JSON, external APIs and Local Storage.",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "keywords": [
+    "electron",
+    "books",
+    "reading",
+    "oop"
+  ],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "electron": "^45.2.3"
+  }
+}
